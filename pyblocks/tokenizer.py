@@ -10,20 +10,14 @@ import tokenize
 
 def translate(readline):
     result     = []
-    last_token = None
-    last_type  = None
 
     token_generator = generate_tokens(readline)
 
     for tokenum, value, _, _, _ in token_generator:
         if tokenum == NAME and value == 'do':
-            pass # Don't allow the "do" through
-        elif last_type == NAME and last_token == 'do':
             BlockTranslator(token_generator, result).translate()
         else:
             result.append([tokenum, value])
-        last_token = value
-        last_type  = tokenum
 
     return result
 
@@ -40,6 +34,9 @@ class BlockTranslator:
         return '_anon_func_%s' % random_string
 
     def translate(self):
+        # Consume the colon after the "do"
+        self.token_generator.next()
+
         # Remove the call so we can add the def before it
         popped_function_call = self.pop_partial_function_call()
 
