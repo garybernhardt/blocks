@@ -8,7 +8,6 @@ import encodings
 import tokenize
 
 
-
 def translate(readline):
     result     = []
     last_token = None
@@ -27,7 +26,6 @@ def translate(readline):
         last_type  = tokenum
 
     return result
-
 
 
 class BlockTranslator:
@@ -101,12 +99,12 @@ class BlockTranslator:
     def restore_popped_partial_function_call(self, popped_function_call):
         self.result.extend(popped_function_call)
 
+
 class StreamReader(utf_8.StreamReader):
     def __init__(self, *args, **kwargs):
         codecs.StreamReader.__init__(self, *args, **kwargs)
         data = tokenize.untokenize(translate(self.stream.readline))
         self.stream = cStringIO.StringIO(data)
-
 
 
 def search_function(s):
@@ -122,7 +120,5 @@ def search_function(s):
         streamwriter=utf8.streamwriter)
 
 
-
 codecs.register(search_function)
-
 
