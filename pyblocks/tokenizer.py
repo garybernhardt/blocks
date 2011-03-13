@@ -74,7 +74,7 @@ class BlockTranslator:
         while True:
             token = self.result.pop()
             if token == [DEDENT, '']:
-                # unshift the newline; it's not part of the function call
+                # leave the newline alone; it's not part of the function call
                 self.result.append(token)
                 break
             else:
