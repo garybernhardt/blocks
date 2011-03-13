@@ -9,10 +9,8 @@ import encodings
 import tokenize
 
 
-def translate(readline):
+def translate(token_generator):
     result     = []
-
-    token_generator = generate_tokens(readline)
 
     for tokenum, value, _, _, _ in token_generator:
         if tokenum == NAME and value == 'do':
@@ -116,7 +114,8 @@ class StreamReader(utf_8.StreamReader):
     def __init__(self, *args, **kwargs):
         codecs.StreamReader.__init__(self, *args, **kwargs)
         try:
-            data = tokenize.untokenize(translate(self.stream.readline))
+            tokens = generate_tokens(self.stream.readline)
+            data = tokenize.untokenize(translate(tokens))
         except Exception, e:
             traceback.print_exc()
             raise
