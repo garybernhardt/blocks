@@ -1,6 +1,7 @@
+import traceback
 import random
 import sys
-from tokenize import generate_tokens, NAME, OP, STRING, NL, DEDENT
+from tokenize import generate_tokens, NAME, OP, STRING, NL, INDENT, DEDENT
 from encodings import utf_8
 import codecs
 import cStringIO
@@ -62,11 +63,24 @@ class BlockTranslator:
         self.result.append([NL, '\n'])
 
     def fast_forward_to_end_of_block_definition(self):
+        """
+        Read tokens until we're at the indentation level higher that we started
+        at, which means we've exited the block definition
+        """
+        indentation_level = 0
+        seen_indent = False
+
         while True:
             tokenum, value, _, _, _ = self.token_generator.next()
             self.result.append([tokenum, value])
 
-            if tokenum == DEDENT:
+            if tokenum == INDENT:
+                indentation_level += 1
+                seen_indent = True
+            elif tokenum == DEDENT:
+                indentation_level -= 1
+
+            if seen_indent and indentation_level == 0:
                 break
 
     def pop_partial_function_call(self):
@@ -74,6 +88,7 @@ class BlockTranslator:
         while True:
             token = self.result.pop()
             if token == [DEDENT, '']:
+                # Don't remove the dedent
                 self.result.append(token)
                 break
             else:
