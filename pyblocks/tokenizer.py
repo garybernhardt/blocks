@@ -18,14 +18,10 @@ def translate(readline):
 
     for tokenum, value, _, _, _ in token_generator:
         if tokenum == NAME and value == 'do':
-            print 'DO'
-            pass
+            pass # Don't allow the "do" through
         elif last_type == NAME and last_token == 'do':
-            print 'REMOVING COLON AFTER DO'
             BlockTranslator(token_generator, result).translate()
-            print 'done'
         else:
-            print repr((tokenum, value))
             result.append([tokenum, value])
         last_token = value
         last_type  = tokenum
@@ -61,7 +57,6 @@ class BlockTranslator:
 
         # Add the new anonymous function as an argument to the call
         self.add_anonymous_function_as_argument()
-        print self.result
 
     def add_anonymous_function(self):
         self.result.append([NAME, 'def'])
@@ -83,29 +78,33 @@ class BlockTranslator:
         removed_nodes = []
         while True:
             token = self.result.pop()
-            print 'popping', token
             if token == [DEDENT, '']:
                 # unshift the newline; it's not part of the function call
                 self.result.append(token)
                 break
             else:
                 removed_nodes.append(token)
+
+        removed_nodes = list(reversed(removed_nodes))
         return removed_nodes
 
     def add_anonymous_function_as_argument(self):
         closing_function_call_paren = self.result.pop()
+        last_token_in_arg_list = self.result[-1]
+        call_has_other_args = last_token_in_arg_list != [OP, '(']
+        if call_has_other_args:
+            self.result.append([OP, ','])
         self.result.append([NAME, self.function_name])
         self.result.append(closing_function_call_paren)
         self.result.append([NL, '\n'])
 
     def restore_popped_partial_function_call(self, popped_function_call):
-        self.result.extend(reversed(popped_function_call))
+        self.result.extend(popped_function_call)
 
 class StreamReader(utf_8.StreamReader):
     def __init__(self, *args, **kwargs):
         codecs.StreamReader.__init__(self, *args, **kwargs)
         data = tokenize.untokenize(translate(self.stream.readline))
-        print data
         self.stream = cStringIO.StringIO(data)
 
 
