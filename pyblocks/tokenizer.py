@@ -87,8 +87,9 @@ class BlockTranslator:
         removed_nodes = []
         while True:
             token = self.result.pop()
-            if token == [DEDENT, '']:
-                # Don't remove the dedent
+            print 'popping', token
+            if token in ([NL, '\n'], [DEDENT, '']):
+                # Don't remove the newline or dedent
                 self.result.append(token)
                 break
             else:
