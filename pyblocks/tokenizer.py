@@ -99,7 +99,12 @@ class BlockTranslator:
 class StreamReader(utf_8.StreamReader):
     def __init__(self, *args, **kwargs):
         codecs.StreamReader.__init__(self, *args, **kwargs)
-        data = tokenize.untokenize(translate(self.stream.readline))
+        try:
+            data = tokenize.untokenize(translate(self.stream.readline))
+        except Exception, e:
+            traceback.print_exc()
+            raise
+        print data
         self.stream = cStringIO.StringIO(data)
 
 
