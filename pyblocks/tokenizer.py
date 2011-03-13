@@ -85,7 +85,6 @@ class BlockTranslator:
         removed_nodes = []
         while True:
             token = self.result.pop()
-            print 'popping', token
             if token in ([NL, '\n'], [DEDENT, '']):
                 # Don't remove the newline or dedent
                 self.result.append(token)
@@ -119,7 +118,6 @@ class StreamReader(utf_8.StreamReader):
         except Exception, e:
             traceback.print_exc()
             raise
-        print data
         self.stream = cStringIO.StringIO(data)
 
 
