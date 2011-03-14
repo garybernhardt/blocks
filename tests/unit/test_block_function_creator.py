@@ -17,11 +17,6 @@ class describe_block_function_creator:
                        return 5 
                    """))
 
-    def it_generates_unique_function_names(self):
-        creator1 = BlockFunctionCreator('')
-        creator2 = BlockFunctionCreator('')
-        expect(creator1.function_name) != creator2.function_name
-
     def it_passes_block_function_arguments(self):
         assert_translated(
             dedent("""

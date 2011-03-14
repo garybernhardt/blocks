@@ -8,8 +8,7 @@ import tokenize
 class BlockFunctionCreator:
     def __init__(self, source):
         self.source = source
-        self.function_name = ''.join(random.choice('0123456789')
-                                     for _ in range(16))
+        self.function_name = '__block_function'
 
     def translate(self):
         tokens = generate_tokens(StringIO(self.source).readline)
