@@ -52,8 +52,25 @@ class describe_function_predefiner:
                 pass
             """ % dict(function_name=BLOCK_FUNCTION_NAME))
 
-    # def it_translates_multiple_blocks(self):
-    # def it_translates_nested_blcoks(self):
+    def it_translates_nested_blocks(self):
+        assert_translated(
+            """
+            block_taker(%(function_name)s_1)
+            def %(function_name)s_1():
+                block_taker(%(function_name)s_2)
+                def %(function_name)s_2():
+                    pass
+            """ % dict(function_name=BLOCK_FUNCTION_NAME),
+            """
+            def %(function_name)s_1():
+                def %(function_name)s_2():
+                    pass
+                block_taker(%(function_name)s_2)
+            block_taker(%(function_name)s_1)
+            """ % dict(function_name=BLOCK_FUNCTION_NAME))
+
+    # def it_translates_multiple_consecutive_blocks(self):
+    # def it_translates_blocks_that_arent_the_first_arg(self):
 
 
 def assert_translated(original, expected):
@@ -61,5 +78,15 @@ def assert_translated(original, expected):
     parsed_expected = parse(dedent(expected))
     predefiner = FunctionPredefiner(parsed_original)
     transformed = predefiner.transform()
-    expect(dump(transformed)) == dump(parsed_expected)
+    try:
+        expect(dump(transformed)) == dump(parsed_expected)
+    except:
+        print
+        print 'expected:'
+        print '-%s-' % dump(parsed_expected, annotate_fields=False)
+        print
+        print 'actual:'
+        print '-%s-' % dump(transformed, annotate_fields=False)
+        print
+        raise
 

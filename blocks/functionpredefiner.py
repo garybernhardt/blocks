@@ -15,9 +15,12 @@ class PredefinitionTransformer(NodeTransformer):
         self.block_function_call_expr = None
         super(PredefinitionTransformer, self).__init__(*args, **kwargs)
 
+    def visit(self, node):
+        return super(PredefinitionTransformer, self).visit(node)
+
     def visit_Expr(self, node):
         call_node = node.value
-        is_a_block_call = call_node.args[0].id == BLOCK_FUNCTION_NAME
+        is_a_block_call = call_node.args[0].id.startswith(BLOCK_FUNCTION_NAME)
         if is_a_block_call:
             self.block_function_call_expr = node
             return self.removed_node()
@@ -36,5 +39,7 @@ class PredefinitionTransformer(NodeTransformer):
             return self.generic_visit(node)
 
     def _definition_before_call(self, definition_node):
-        return (definition_node, self.block_function_call_expr)
+        call = self.block_function_call_expr.value
+        return (PredefinitionTransformer().visit(definition_node),
+                self.block_function_call_expr)
 
