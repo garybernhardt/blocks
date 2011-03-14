@@ -1,3 +1,4 @@
+from copy import deepcopy
 from ast import parse, dump
 from textwrap import dedent
 
@@ -26,4 +27,18 @@ class describe_function_predefiner:
         predefiner = FunctionPredefiner(parsed_original)
         transformed = predefiner.transform()
         expect(dump(transformed)) == dump(parsed_expected)
+
+    def it_ignores_functions_that_arent_blocks(self):
+        original = dedent(
+            """
+            block_taker(some_function)
+            def some_function():
+                pass
+            """)
+        parsed_original = parse(original)
+        predefiner = FunctionPredefiner(deepcopy(parsed_original))
+        transformed = predefiner.transform()
+        expect(dump(transformed)) == dump(parsed_original)
+
+    # def it_doesnt_translate_function_definitions_around_blocks
 
