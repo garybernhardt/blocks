@@ -40,5 +40,13 @@ def assert_translated(original, expected):
     creator = BlockFunctionCreator(original)
     translated = creator.translate()
     function_name = creator.function_name
-    expect(translated) == expected % dict(function_name = function_name)
+    expected = expected % dict(function_name = function_name)
+    try:
+        expect(translated) == expected
+    # XXX: Expecter should do this for us
+    except AssertionError:
+        print 'Failed assertion:\n-%s-\n-%s-' % (
+            translated.replace(' ', '_'),
+            expected.replace(' ', '_'))
+        raise
 
