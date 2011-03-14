@@ -11,7 +11,7 @@ class describe_block_function_creator:
                         """)
         creator = BlockFunctionCreator(source)
         translated = creator.translate()
-        function_name = creator.anonymous_function_name
+        function_name = creator.function_name
         expected = dedent("""
                           describe(%s)
                           def %s():
@@ -19,4 +19,9 @@ class describe_block_function_creator:
                           """ %
                           (function_name, function_name))
         expect(translated) == expected
+
+    def it_generates_unique_function_names(self):
+        creator1 = BlockFunctionCreator('')
+        creator2 = BlockFunctionCreator('')
+        expect(creator1.function_name) != creator2.function_name
 
