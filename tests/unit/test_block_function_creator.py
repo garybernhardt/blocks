@@ -30,8 +30,24 @@ class describe_block_function_creator:
                 return 5 
             """)
 
+    def it_translates_with_code_before_and_after_block_calls(self):
+        assert_translated(
+            """
+            x = 1
+            describe(4) do:
+                return 5
+            y = 6
+            """,
+            """
+            x =1 
+            describe (4 ,%(function_name)s )
+            def %(function_name)s ():
+
+                return 5 
+            y =6 
+            """)
+
     # def it_translates_nested_blocks
-    # def it_translates_with_code_before_and_after_block_calls
     # def it_translates_blocks_with_arguments
 
 
