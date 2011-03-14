@@ -1,6 +1,7 @@
 from expecter import expect
 from textwrap import dedent
 from blocks.blockfunctioncreator import BlockFunctionCreator
+from blocks.blockfunctioncreator import BLOCK_FUNCTION_NAME
 
 
 class describe_block_function_creator:
@@ -71,8 +72,7 @@ def assert_translated(original, expected):
     original, expected = dedent(original), dedent(expected)
     creator = BlockFunctionCreator(original)
     translated = creator.translate()
-    function_name = creator.function_name
-    expected = expected % dict(function_name = function_name)
+    expected = expected % dict(function_name=BLOCK_FUNCTION_NAME)
     try:
         expect(translated) == expected
     # XXX: Expecter should do this for us
