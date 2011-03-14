@@ -29,7 +29,9 @@ class PredefinitionTransformer(NodeTransformer):
 
     def visit_FunctionDef(self, node):
         if self.block_function_call_expr:
-            return self._definition_before_call(node)
+            new_node = self._definition_before_call(node)
+            self.block_function_call_expr = None
+            return new_node
         else:
             return self.generic_visit(node)
 

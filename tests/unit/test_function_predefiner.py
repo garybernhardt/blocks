@@ -31,7 +31,29 @@ class describe_function_predefiner:
             """)
         assert_translated(original, original)
 
-    # def it_doesnt_translate_function_definitions_around_blocks
+    def it_doesnt_translate_function_definitions_around_blocks(self):
+        assert_translated(
+            """
+            def before(something):
+                pass
+            block_taker(%(function_name)s)
+            def %(function_name)s():
+                pass
+            def after(something):
+                pass
+            """ % dict(function_name=BLOCK_FUNCTION_NAME),
+            """
+            def before(something):
+                pass
+            def %(function_name)s():
+                pass
+            block_taker(%(function_name)s)
+            def after(something):
+                pass
+            """ % dict(function_name=BLOCK_FUNCTION_NAME))
+
+    # def it_translates_multiple_blocks(self):
+    # def it_translates_nested_blcoks(self):
 
 
 def assert_translated(original, expected):
