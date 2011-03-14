@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name         = "pyblocks",
-    packages     = ['pyblocks'],
+    name         = "blocks",
+    packages     = ['blocks'],
 )
 

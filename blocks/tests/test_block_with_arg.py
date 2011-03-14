@@ -1,4 +1,4 @@
-#coding: pyblocks
+#coding: blocks
 
 def block_taker_with_arg(x, block):
     return x + block()

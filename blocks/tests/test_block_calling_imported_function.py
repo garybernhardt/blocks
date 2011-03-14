@@ -1,4 +1,4 @@
-#coding: pyblocks
+#coding: blocks
 from blocktaker import block_taker
 
 

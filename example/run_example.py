@@ -1,3 +1,3 @@
-import pyblocks
+import blocks
 import description
 

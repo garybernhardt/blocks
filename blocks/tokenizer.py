@@ -122,10 +122,10 @@ class StreamReader(utf_8.StreamReader):
 
 
 def search_function(s):
-    if s!='pyblocks': return None
+    if s!='blocks': return None
     utf8=encodings.search_function('utf8')
     return codecs.CodecInfo(
-        name='pyblocks',
+        name='blocks',
         encode = utf8.encode,
         decode = utf8.decode,
         incrementalencoder=utf8.incrementalencoder,
