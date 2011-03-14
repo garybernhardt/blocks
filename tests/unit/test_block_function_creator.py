@@ -43,3 +43,7 @@ class describe_block_function_creator:
                           (function_name, function_name))
         expect(translated) == expected
 
+    # def it_translates_nested_blocks
+    # def it_translates_with_code_before_and_after_block_calls
+    # def it_translates_blocks_with_arguments
+
