@@ -69,7 +69,25 @@ class describe_function_predefiner:
             block_taker(%(function_name)s_1)
             """ % dict(function_name=BLOCK_FUNCTION_NAME))
 
-    # def it_translates_multiple_consecutive_blocks(self):
+    def it_translates_consecutive_blocks(self):
+        assert_translated(
+            """
+            block_taker(%(function_name)s_1)
+            def %(function_name)s_1():
+                pass
+            block_taker(%(function_name)s_2)
+            def %(function_name)s_2():
+                pass
+            """ % dict(function_name=BLOCK_FUNCTION_NAME),
+            """
+            def %(function_name)s_1():
+                pass
+            block_taker(%(function_name)s_1)
+            def %(function_name)s_2():
+                pass
+            block_taker(%(function_name)s_2)
+            """ % dict(function_name=BLOCK_FUNCTION_NAME))
+
     # def it_translates_blocks_that_arent_the_first_arg(self):
 
 
