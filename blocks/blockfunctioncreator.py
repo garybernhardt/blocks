@@ -45,9 +45,6 @@ class BlockTranslator:
         # Add the function definition
         self.add_anonymous_function()
 
-        # Fast forward past the body of the function
-        self.fast_forward_to_end_of_block_definition()
-
     def add_anonymous_function(self):
         self.result.append([NAME, 'def'])
         self.result.append([NAME, self.function_name])
@@ -55,27 +52,6 @@ class BlockTranslator:
         self.result.append([OP, ')'])
         self.result.append([OP, ':'])
         self.result.append([NL, '\n'])
-
-    def fast_forward_to_end_of_block_definition(self):
-        """
-        Read tokens until we're at the indentation level higher that we started
-        at, which means we've exited the block definition
-        """
-        indentation_level = 0
-        seen_indent = False
-
-        while True:
-            tokenum, value, _, _, _ = self.token_generator.next()
-            self.result.append([tokenum, value])
-
-            if tokenum == INDENT:
-                indentation_level += 1
-                seen_indent = True
-            elif tokenum == DEDENT:
-                indentation_level -= 1
-
-            if seen_indent and indentation_level == 0:
-                break
 
     def add_anonymous_function_as_argument(self):
         closing_function_call_paren = self.result.pop()
