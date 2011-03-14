@@ -47,7 +47,23 @@ class describe_block_function_creator:
             y =6 
             """)
 
-    # def it_translates_nested_blocks
+    def it_translates_nested_blocks(self):
+        assert_translated(
+            """
+            describe('something') do:
+                it('does something') do:
+                    expect(1) == 2
+            """,
+            """
+            describe ('something',%(function_name)s )
+            def %(function_name)s ():
+
+                it ('does something',%(function_name)s )
+                def %(function_name)s ():
+
+                    expect (1 )==2 
+            """)
+
     # def it_translates_blocks_with_arguments
 
 
