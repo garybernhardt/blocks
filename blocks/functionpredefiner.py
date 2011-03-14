@@ -20,12 +20,15 @@ class PredefinitionTransformer(NodeTransformer):
 
     def visit_Expr(self, node):
         call_node = node.value
-        is_a_block_call = call_node.args[0].id.startswith(BLOCK_FUNCTION_NAME)
-        if is_a_block_call:
+        if self.is_a_block_call(call_node):
             self.block_function_call_expr = node
             return self.removed_node()
         else:
             return self.generic_visit(node)
+
+    def is_a_block_call(self, call_node):
+        return any(arg.id.startswith(BLOCK_FUNCTION_NAME)
+                   for arg in call_node.args)
 
     def removed_node(self):
         return None

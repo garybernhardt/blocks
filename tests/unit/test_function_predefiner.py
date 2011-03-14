@@ -88,7 +88,18 @@ class describe_function_predefiner:
             block_taker(%(function_name)s_2)
             """ % dict(function_name=BLOCK_FUNCTION_NAME))
 
-    # def it_translates_blocks_that_arent_the_first_arg(self):
+    def it_translates_blocks_that_arent_the_first_arg(self):
+        assert_translated(
+            """
+            block_taker(foo, %(function_name)s)
+            def %(function_name)s():
+                pass
+            """ % dict(function_name=BLOCK_FUNCTION_NAME),
+            """
+            def %(function_name)s():
+                pass
+            block_taker(foo, %(function_name)s)
+            """ % dict(function_name=BLOCK_FUNCTION_NAME))
 
 
 def assert_translated(original, expected):
