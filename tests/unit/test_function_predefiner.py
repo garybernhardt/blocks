@@ -10,35 +10,34 @@ from blocks.blockfunctioncreator import BLOCK_FUNCTION_NAME
 
 class describe_function_predefiner:
     def it_moves_function_before_use(self):
-        original = dedent(
+        assert_translated(
             """
             block_taker(%(function_name)s)
             def %(function_name)s():
                 pass
-            """ % dict(function_name=BLOCK_FUNCTION_NAME))
-        expected = dedent(
+            """ % dict(function_name=BLOCK_FUNCTION_NAME),
             """
             def %(function_name)s():
                 pass
             block_taker(%(function_name)s)
             """ % dict(function_name=BLOCK_FUNCTION_NAME))
-        parsed_original = parse(original)
-        parsed_expected = parse(expected)
-        predefiner = FunctionPredefiner(parsed_original)
-        transformed = predefiner.transform()
-        expect(dump(transformed)) == dump(parsed_expected)
 
     def it_ignores_functions_that_arent_blocks(self):
-        original = dedent(
+        original = (
             """
             block_taker(some_function)
             def some_function():
                 pass
             """)
-        parsed_original = parse(original)
-        predefiner = FunctionPredefiner(deepcopy(parsed_original))
-        transformed = predefiner.transform()
-        expect(dump(transformed)) == dump(parsed_original)
+        assert_translated(original, original)
 
     # def it_doesnt_translate_function_definitions_around_blocks
+
+
+def assert_translated(original, expected):
+    parsed_original = parse(dedent(original))
+    parsed_expected = parse(dedent(expected))
+    predefiner = FunctionPredefiner(parsed_original)
+    transformed = predefiner.transform()
+    expect(dump(transformed)) == dump(parsed_expected)
 
